@@ -1,20 +1,26 @@
 {
-  "name": "foundry-typescript-template",
-  "version": "1.0.0",
-  "description": "Foundry VTT Typescript Template",
+  "name": "foundry-token-based-directional-sound",
+  "version": "0.0.1",
+  "description": "A module that lets your game's audio have a better 3d depth based on witch character token is selected",
   "main": "index.js",
   "scripts": {
     "build": "gulp build"
   },
-  "author": "",
+  "author": "Carlos Eduardo Benedetti Lopes Junior",
   "license": "MIT",
+  "keywords": [
+    "foundryvtt",
+    "foundry",
+    "module",
+    "audio"
+  ],
   "devDependencies": {
+    "@league-of-foundry-developers/foundry-vtt-types": "^9.280.0",
     "gulp": "^4.0.2",
     "gulp-typescript": "^6.0.0-alpha.1"
   },
   "dependencies": {
     "@types/node": "^14.10.1",
-    "foundry-pc-types": "gitlab:foundry-projects/foundry-pc/foundry-pc-types",
     "typescript": "^4.0.2"
   }
 }
