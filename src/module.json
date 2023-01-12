@@ -1,14 +1,14 @@
 {
-  "name": "foundry-typescript-template",
-  "title": "Typescript Template",
-  "description": "", 
+  "name": "token-based-directional-sound",
+  "title": "Token Based Directional Sound",
+  "description": "A module that lets your game's audio have a better 3d depth based on witch character token is selected", 
   "authors": [
     {
-      "name": "spacemandev",
-      "discord": "spacemandev#6256"
+      "name": "Carlos Eduardo Benedetti Lopes Junior",
+      "discord": "Feanor#2962"
     }
   ],
-  "version": "0.0.1",
+  "version": "0.0.1-alpha",
   "minimumCoreVersion": "0.7.9",
   "compatibleCoreVersion": "0.7.9",
   "manifestPlusVersion": "1.0.0",
@@ -24,20 +24,6 @@
     "./templates/**",
     "./module.json",
     "./README.md"
-  ],
-  "media": [
-    {
-      "type": "icon",
-      "location": ""
-    }, 
-    {
-      "type": "cover",
-      "location": ""
-    },
-    {
-      "type": "screenshot",
-      "location": ""
-    }
   ],
   "esmodules": [
     "scripts/module.js"
