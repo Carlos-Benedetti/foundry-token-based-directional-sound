@@ -1,31 +1,4 @@
-export class LogLevel {
-    private _name = "";
-    private _value = 0;
-
-    /**
-     * Create a LogLevel object
-     * @param {String} name - Description for the log level
-     * @param {Number} value - Value used for thresholding. Higher -> More visibility
-     */
-    constructor(name, value) {
-        this._name = name;
-        this._value = value;
-    }
-
-    /**
-     * Get the name of the log level
-     */
-    get name() {
-        return this._name;
-    }
-
-    /**
-     * Get the value of the log level
-     */
-    get value() {
-        return this._value;
-    }
-}
+import { LogLevel } from "./LogLevel";
 
 export default class Logger {
     /**
@@ -77,7 +50,7 @@ export default class Logger {
     static log(level: LogLevel, ...message: any[])
     static log(level: LogLevel, ...message: any[]) {
         if (Logger.threshold.value <= level.value) {
-            console.log(...[this.moduleName, ' | ', ...message]);
+            console.log(...[`[${this.moduleName}]: `, ...message]);
         }
     }
 }

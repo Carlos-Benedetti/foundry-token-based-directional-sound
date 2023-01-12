@@ -1,38 +1,17 @@
-import Logger from "./util/logger"
-
-// Version
-const VERSION = "v1.5.3";
-
-// Target for end users
-const RELEASE = {
-    threshold: Logger.High,
-    name: "Release"
-}
-
-// Target for running in foundry as a developer
-const DEVEL = {
-    threshold: Logger.Low,
-    name: "Devel"
-}
+import { APP_NAME, DEVEL, RELEASE, VERSION } from "./constants";
+import { DirectionalAmbientSound } from "./util/DirectionalAmbientSound";
+import Logger from "./util/Logger"
 
 const Target = RELEASE;
 
-function init() {
-    Logger.init("Background Volume", Target.threshold);
+const activeAmbientSounds: { [id: string]: DirectionalAmbientSound } = {}
 
-    if (Target == DEVEL) {
-        // Enable hook debugging
-        CONFIG.debug.hooks = true;
-    }
-
-    Logger.log(Logger.High, `Background Volume ${VERSION} is initialized (${Target.name} target)`);
-}
-
-let listenerToken: Token | null
+export let listenerToken: Token | null
 
 async function ready() {
 
-    Logger.log(Logger.Low, "Background Volume is ready");
+    Logger.log(Logger.Low, "ready");
+
     if (!(game instanceof Game)) return
 
     await game.audio.awaitFirstGesture();
@@ -57,40 +36,46 @@ function onSceneUpdate(data, id, options) {
     }
 }
 
-Hooks.on("init", init);
-Hooks.on("ready", ready);
-Hooks.on("updateScene", onSceneUpdate);
+function init() {
+    Logger.init(APP_NAME, Target.threshold);
 
-Hooks.once('devModeReady', ({ registerPackageDebugFlag }) => {
+    if (Target == DEVEL) {
+        CONFIG.debug.hooks = true;
+    }
+
+    Logger.log(Logger.High, `Version ${VERSION} is initialized (${Target.name} target)`);
+}
+
+function devModeReadyHandler({ registerPackageDebugFlag }) {
     registerPackageDebugFlag('benettest');
-});
+}
 
 /* ------------------------------------ */
 // When token is about to be moved
 /* ------------------------------------ */
-Hooks.on("updateToken", (_token, _updateData, _options, _userId) => {
+function updateTokenHandler(_token, _updateData, _options, _userId) {
     Logger.log(Logger.Low, "updateToken called");
 
     if (listenerToken) {
         doTheSterio();
     }
-});
+}
 
 /* ------------------------------------ */
 // When ambient sound is about to be moved
 /* ------------------------------------ */
-Hooks.on("updateAmbientSound", (_ambientSound, _updateData, _options, _userId) => {
+function updateAmbientSoundHandler(_ambientSound, _updateData, _options, _userId) {
     Logger.log(Logger.Low, "updateAmbientSound called");
 
     if (listenerToken) {
         doTheSterio();
     }
-});
+}
 
 /* ------------------------------------ */
 // When the user starts controlling a token
 /* ------------------------------------ */
-Hooks.on("controlToken", async (token, selected) => {
+async function controlTokenHandler(token, selected) {
 
     if (!(game instanceof Game)) return
 
@@ -124,8 +109,18 @@ Hooks.on("controlToken", async (token, selected) => {
 
         Logger.log(Logger.Low, "Looks like you are the GM");
     }
-});
+}
 
+
+function renderPlayerListHandler(_, html) {
+    if (Target != DEVEL) return
+    if (!(game instanceof Game)) return
+
+    const loggedInUserListItem = html.find(`[data-user-id="${game.userId}"]`)
+    loggedInUserListItem.append(
+        "<div><p>TDS Count: </p><b class='tds-listeners'></b></div>"
+    );
+}
 
 function doTheSterio() {
 
@@ -133,86 +128,59 @@ function doTheSterio() {
     if (game.audio.locked) return;
     if (!listenerToken) return;
 
-    const tokenPosition = {
-        x: listenerToken.center.x,
-        y: listenerToken.center.y
-    };
-
-    const currentTokenId = listenerToken.id;
-
+    //prepare ambientSound
     const ambientSounds = game.canvas.sounds.placeables;
-    Logger.log(Logger.Low, "The sounds: ", ambientSounds);
+    const updateTime = new Date()
 
 
     for (const ambientSound of ambientSounds) {
-        const { sound } = ambientSound
         if (!ambientSound.isAudible) {
             Logger.log(Logger.Medium, "Sound not Audible for (probably is just turned off)");
             continue;
         }
-        if (!sound.soundCtx) {
+        if (!ambientSound.sound.soundCtx) {
             Logger.log(Logger.Medium, "No Audio Context, waiting for user interaction");
             continue;
         }
 
-
-        const soundCtx = sound.container
-
-        if (soundCtx.gainNode.numberOfOutputs == 1) {
-            const audioCtx = new AudioContext();
-            const source = audioCtx.createMediaElementSource(soundCtx.element);
-
-            const gainNodeL = audioCtx.createGain();
-            const gainNodeR = audioCtx.createGain();
-
-            const merger = audioCtx.createChannelMerger(2);
-
-            soundCtx.gainNode.connect(gainNodeL);
-            soundCtx.gainNode.connect(gainNodeR);
-
-            gainNodeL.connect(merger, 0, 0);
-            gainNodeR.connect(merger, 0, 1);
-
-            merger.connect(audioCtx.destination);
-
-            soundCtx.gainNode.addEventListener('sterioUpdate', () => {
-
-                const rightEar = {
-                    x: ambientSound.center.x + (ambientSound.width / 2),
-                    y: ambientSound.center.y
-                };
-
-                const leftEar = {
-                    x: ambientSound.center.x - (ambientSound.width / 2),
-                    y: ambientSound.center.y
-                };
-
-                listenerToken.width
-
-
-
-                const lDistance = canvas.grid.measureDistance(tokenPosition, leftEar);
-                const rDistance = canvas.grid.measureDistance(tokenPosition, rightEar);
-
-                const { width } = ambientSound
-                const deltaW = lDistance - rDistance
-
-                const leftGain = (width - deltaW) / 2;
-                const rightGain = (width + deltaW) / 2;
-
-                gainNodeL.gain.value = leftGain
-                gainNodeR.gain.value = rightGain
-
-                Logger.log(Logger.Low, `[Sound Updated ${ambientSound.id}] L: ${leftGain} | R: ${rightGain} \\ Delta L: ${lDistance} | Delta R: ${rDistance} | W: ${width} | Delta W: ${deltaW}`);
-                
-            })
+        if (!activeAmbientSounds[ambientSound.id]) {
+            activeAmbientSounds[ambientSound.id] = new DirectionalAmbientSound(ambientSound)
+            activeAmbientSounds[ambientSound.id].connect()
         }
 
-        soundCtx.gainNode.dispatchEvent(new Event('sterioUpdate'))
-
-
+        activeAmbientSounds[ambientSound.id].lastUpdate = updateTime
 
     }
 
+    for (const [key, ambientSound] of Object.entries(activeAmbientSounds)) {
+
+        if (ambientSound.lastUpdate != updateTime) {
+            ambientSound.disconnect()
+            delete activeAmbientSounds[key]
+            continue
+        }
+
+        ambientSound.listenerUpdateHandler(listenerToken)
+
+    }
+
+    if (Target != DEVEL) return
+    //[debug]show amount of active soundLayers
+    const tdsListenersEle = document.querySelector('.tds-listeners')
+    if (!tdsListenersEle) {
+        Logger.log(Logger.Medium, ".tds-listeners not found");
+        return
+    }
+    tdsListenersEle.innerHTML = `${Object.entries(activeAmbientSounds).length}`
 
 }
+
+Hooks.on("init", init);
+Hooks.on("ready", ready);
+Hooks.on("updateScene", onSceneUpdate);
+Hooks.on("updateToken", updateTokenHandler);
+Hooks.on("updateAmbientSound", updateAmbientSoundHandler);
+Hooks.on("controlToken", controlTokenHandler);
+Hooks.on('renderPlayerList', renderPlayerListHandler);
+
+Hooks.once('devModeReady', devModeReadyHandler);
