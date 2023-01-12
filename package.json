@@ -1,6 +1,6 @@
 {
-  "name": "foundry-token-based-directional-sound",
-  "version": "0.0.1",
+  "name": "token-based-directional-sound",
+  "version": "0.0.1-alpha",
   "description": "A module that lets your game's audio have a better 3d depth based on witch character token is selected",
   "main": "index.js",
   "scripts": {
@@ -12,6 +12,7 @@
     "foundryvtt",
     "foundry",
     "module",
+    "typescript",
     "audio"
   ],
   "devDependencies": {
@@ -21,6 +22,6 @@
   },
   "dependencies": {
     "@types/node": "^14.10.1",
-    "typescript": "^4.0.2"
+    "typescript": "^4.6.2"
   }
 }

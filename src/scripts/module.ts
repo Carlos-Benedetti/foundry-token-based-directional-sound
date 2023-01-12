@@ -138,7 +138,7 @@ function doTheSterio() {
             Logger.log(Logger.Medium, "Sound not Audible for (probably is just turned off)");
             continue;
         }
-        if (!ambientSound.sound.soundCtx) {
+        if (!ambientSound.sound.context) {
             Logger.log(Logger.Medium, "No Audio Context, waiting for user interaction");
             continue;
         }

@@ -1,38 +1,22 @@
-# Changelog
-*Please for the love of all that you hold dear, do everyone a favor and include a changelog here rather than making people guess at the capabilities of your module since last release*
+# Token Based Directional Sound
+![](https://img.shields.io/badge/Foundry-v0.7.9-informational)
+![Latest Release Download Count](https://img.shields.io/github/downloads/Carlos-Benedetti/token-based-directional-sound/latest/module.zip)
+![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Ftoken-based-directional-sound&colorB=4aa94a)
 
-# Description
-This is a typescript template to get you started. This is not intended for beginners.
+"A module that lets your game's audio have a better 3d depth based on witch character token is selected"
 
-Please use the javascript template as necessary for your stuff.
+* **Author**: Carlos Benedetti (Feanor#2962)
+* **Version**: 0.0.1-alpha
+* **Foundry VTT Compatibility**: v9
+* **System Compatibility**: Universal
 
+## Installation
 
-## Manifest Plus
-Adds the following fields to the manifest for package browsers to pick up and show information better:
+In the setup screen, use the URL https://github.com/Carlos-Benedetti/token-based-directional-sound/releases/latest/download/module.json to install the module.
 
-```
-- includes: [] # list of files to include in the zip
-- icon: "" # link to icon img
-- cover: "" #link to cover img
-- screenshots: [] #links to screenshot images
-- video: ""
-- authors: [
-  {
-    "name": "name",
-    "email": "email",
-    "discord": "discord"
-  }
-]
-
-```
+## Release Notes
+See [CHANGELOG](CHANGELOG.md)
 
 
-## Versioned Releases
-
-The Github Actions script will automatically create a Latest release which will always have a module.json that points to the latest release, and a versioned release whenever you update the version in your module.json. 
-
-This allows people who depend on a specific version of your module to just install that and be version locked. The versioned releases will *not* auto update. 
-
-
-# License
+## License
 MIT License. Do what you will. PRs welcome. 
