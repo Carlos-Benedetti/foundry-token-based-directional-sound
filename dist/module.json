@@ -8,7 +8,7 @@
       "discord": "Feanor#2962"
     }
   ],
-  "version": "0.0.3-alpha",
+  "version": "0.0.5-alpha",
   "minimumCoreVersion": "0.7.9",
   "compatibleCoreVersion": "0.7.9",
   "manifestPlusVersion": "1.0.0",
@@ -26,16 +26,7 @@
     "./README.md"
   ],
   "esmodules": [
-    "scripts/module.js"
+    "bundle.js"
   ],
-  "styles": [
-    "styles/module.css"
-  ],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "lang/en.json"
-    }
-  ]
+  "languages": []
 }

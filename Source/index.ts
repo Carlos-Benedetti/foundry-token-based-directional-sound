@@ -1,6 +1,6 @@
-import { APP_NAME, DEVEL, RELEASE, VERSION } from "./constants";
-import { DirectionalAmbientSound } from "./util/DirectionalAmbientSound";
-import Logger from "./util/Logger"
+import { APP_NAME, DEVEL, RELEASE, VERSION } from "./scripts/constants";
+import { DirectionalAmbientSound } from "./scripts/util/DirectionalAmbientSound";
+import Logger from "./scripts/util/Logger"
 
 const Target = RELEASE;
 

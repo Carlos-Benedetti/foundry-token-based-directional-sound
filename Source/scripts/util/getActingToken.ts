@@ -15,7 +15,9 @@ function getActingToken(actor: any, limitActorTokensToControlledIfHaveSome = tru
             tokens.push(
                 ...canvas.tokens!.controlled.filter(t => {
                     if (!(t instanceof Token)) return false;
+                    //@ts-ignore
                     if (linked) return t.data.actorLink && t.data.actorId === this.id;
+                    //@ts-ignore
                     return t.data.actorId === this.id;
                 })
             );
