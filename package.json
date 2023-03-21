@@ -1,6 +1,6 @@
 {
   "name": "token-based-directional-sound",
-  "version": "0.0.1-alpha",
+  "version": "0.0.2-alpha",
   "description": "A module that lets your game's audio have a better 3d depth based on witch character token is selected",
   "main": "index.js",
   "scripts": {
